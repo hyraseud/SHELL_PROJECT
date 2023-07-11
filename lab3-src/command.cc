@@ -99,12 +99,7 @@ void Command::execute() {
         if (isatty(0)) Shell::prompt();
         return;
     }
-    //printf("%s\n", _outFile->c_str());
-    //if (strstr(_outFile->c_str(), "\n") == NULL) perror("Ambiguous output redirect.");
-    // Print contents of Command data structure
-    //print();
-    //if (count > 1) perror("Ambiguous output redirect.");	
-    // Add execution here
+   
     // For every simple command fork a new process
     // Setup i/o redirection
     // and call exec
@@ -169,15 +164,15 @@ void Command::execute() {
         close(fderr);
 	size_t size = simpleCommand->_arguments.size();
         char ** args= new char* [size + 1];
-        //printf("size %d", size);
         for (size_t i = 0; i < size; i++)
         {
-            //fprintf(stderr, "debug 2");
             args[i] = const_cast<char*> (simpleCommand->_arguments[i]->c_str());
             //printf("%d, %s\n", i, args[i]);
 	    uscore = args[i];
         }
         args[size] = NULL; //assign last place value to null
+
+	    
 	//check env variables
         //check for setenv and unsetenv
         if ( !strcmp( args[0], "setenv" ) ) {
@@ -202,9 +197,7 @@ void Command::execute() {
                 continue;
             }
         }
-	//else if ( !strcmp( args[1], "?" ) ) {
-	   //printf();
-	//}
+	
         extern char ** environ;
         child = fork();
 
@@ -239,7 +232,7 @@ void Command::execute() {
         //delete args;
     }
 
-
+    //reset
     dup2(default_in, 0);
     dup2(default_out, 1);
     dup2(default_err, 2);
